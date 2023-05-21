@@ -21,7 +21,8 @@ import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
 import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
-import ToolbarPlugin from "./plugins/toolbarPlugin";
+import ToolbarPlugin from "./plugins/toolbar/toolbarPlugin";
+import { AutoFocusPlugin } from "./plugins/autoFocus";
 
 const EDITOR_NODES = [
   CodeNode,
@@ -46,7 +47,7 @@ const theme: EditorThemeClasses = {
 
 const Placeholder = () => {
   return (
-    <div className="absolute left-[1.125rem] top-[1.125rem] opacity-50">
+    <div className="absolute left-[18px] top-[74px] opacity-50">
       Start writing...
     </div>
   );
@@ -79,6 +80,7 @@ export const Editor: React.FunctionComponent = () => {
       }
     >
       <LexicalComposer initialConfig={initialConfig}>
+        <ToolbarPlugin />
         <RichTextPlugin
           contentEditable={<ContentEditable />}
           placeholder={<Placeholder />}
@@ -87,8 +89,9 @@ export const Editor: React.FunctionComponent = () => {
 
         <OnChangePlugin onChange={onChange} />
         <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
-        <ToolbarPlugin />
+
         <HistoryPlugin />
+        <AutoFocusPlugin />
       </LexicalComposer>
     </div>
   );

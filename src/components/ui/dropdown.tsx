@@ -21,17 +21,17 @@ import {
 import { Check, ChevronRight, Circle } from "lucide-react";
 import { cn } from "~/utils/cn";
 
-const DropdownMenu = Root as React.FunctionComponent;
+const DropdownMenu = Root;
 
-const DropdownMenuTrigger = Trigger as React.FunctionComponent;
+const DropdownMenuTrigger = Trigger;
 
-const DropdownMenuGroup = Group as React.FunctionComponent;
+const DropdownMenuGroup = Group;
 
-const DropdownMenuPortal = Portal as React.FunctionComponent;
+const DropdownMenuPortal = Portal;
 
-const DropdownMenuSub = Sub as React.FunctionComponent;
+const DropdownMenuSub = Sub;
 
-const DropdownMenuRadioGroup = RadioGroup as React.FunctionComponent;
+const DropdownMenuRadioGroup = RadioGroup;
 
 const DropdownMenuSubTrigger = React.forwardRef<
   React.ElementRef<typeof SubTrigger>,
@@ -44,7 +44,7 @@ const DropdownMenuSubTrigger = React.forwardRef<
     className={cn(
       "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent data-[state=open]:bg-accent",
       inset && "pl-8",
-      className as string | undefined
+      className
     )}
     {...props}
   >
