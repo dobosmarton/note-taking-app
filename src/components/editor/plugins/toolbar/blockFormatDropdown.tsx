@@ -113,8 +113,6 @@ export const BlockFormatDropDown: React.FunctionComponent<Props> = ({
   };
 
   const formatQuote = () => {
-    console.log("format", blockType);
-
     if (blockType !== "quote") {
       editor.update(() => {
         const selection = $getSelection();

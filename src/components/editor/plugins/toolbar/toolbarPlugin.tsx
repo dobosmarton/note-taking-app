@@ -1,14 +1,7 @@
-import type { LexicalEditor, LexicalNode, NodeKey, TextNode } from "lexical";
+import type { LexicalEditor, NodeKey, TextNode } from "lexical";
 import {
   Undo,
   Redo,
-  Text,
-  Heading1,
-  Heading2,
-  Heading3,
-  List,
-  ListOrdered,
-  Quote,
   Code,
   Bold,
   Italic,
@@ -19,21 +12,13 @@ import {
 } from "lucide-react";
 
 import {
-  $createCodeNode,
   $isCodeNode,
   CODE_LANGUAGE_FRIENDLY_NAME_MAP,
   CODE_LANGUAGE_MAP,
   getLanguageFriendlyName,
 } from "@lexical/code";
 import { $isLinkNode, TOGGLE_LINK_COMMAND } from "@lexical/link";
-import {
-  $isListNode,
-  INSERT_CHECK_LIST_COMMAND,
-  INSERT_ORDERED_LIST_COMMAND,
-  INSERT_UNORDERED_LIST_COMMAND,
-  ListNode,
-  REMOVE_LIST_COMMAND,
-} from "@lexical/list";
+import { $isListNode, ListNode } from "@lexical/list";
 import {
   $findMatchingParent,
   $getNearestBlockElementAncestorOrThrow,
@@ -44,17 +29,10 @@ import {
   $getSelectionStyleValueForProperty,
   $isParentElementRTL,
   $patchStyleText,
-  $setBlocksType,
 } from "@lexical/selection";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { $isDecoratorBlockNode } from "@lexical/react/LexicalDecoratorBlockNode";
-import {
-  $createHeadingNode,
-  $createQuoteNode,
-  $isHeadingNode,
-  $isQuoteNode,
-  type HeadingTagType,
-} from "@lexical/rich-text";
+import { $isHeadingNode, $isQuoteNode } from "@lexical/rich-text";
 import {
   $createParagraphNode,
   $getNodeByKey,
@@ -66,7 +44,6 @@ import {
   CAN_UNDO_COMMAND,
   COMMAND_PRIORITY_CRITICAL,
   COMMAND_PRIORITY_NORMAL,
-  DEPRECATED_$isGridSelection,
   FORMAT_ELEMENT_COMMAND,
   FORMAT_TEXT_COMMAND,
   INDENT_CONTENT_COMMAND,
@@ -81,7 +58,7 @@ import * as React from "react";
 
 import { IS_APPLE } from "~/utils/environment";
 import { sanitizeUrl } from "~/utils/url";
-import { getSelectedNode } from "~/utils/getSelectedNode";
+import { getSelectedNode } from "~/utils/lexical";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -93,6 +70,8 @@ import {
   BlockFormatDropDown,
   blockTypeToBlockName,
 } from "./blockFormatDropdown";
+import { createPortal } from "react-dom";
+import { LinkEditor } from "./linkEditor";
 
 function getCodeLanguageOptions(): [string, string][] {
   const options: [string, string][] = [];
@@ -267,6 +246,7 @@ export default function ToolbarPlugin(): JSX.Element {
           const type = $isHeadingNode(element)
             ? element.getTag()
             : element.getType();
+
           if (type in blockTypeToBlockName) {
             setBlockType(type as keyof typeof blockTypeToBlockName);
           }
@@ -439,9 +419,9 @@ export default function ToolbarPlugin(): JSX.Element {
 
       {blockType in blockTypeToBlockName && activeEditor === editor && (
         <BlockFormatDropDown
+          editor={activeEditor}
           disabled={!isEditable}
           blockType={blockType}
-          editor={editor}
         />
       )}
       {blockType === "code" ? (
@@ -577,7 +557,7 @@ export default function ToolbarPlugin(): JSX.Element {
                     "strikethrough"
                   );
                 }}
-                className={"item " + dropDownActiveClass(isStrikethrough)}
+                className={dropDownActiveClass(isStrikethrough)}
                 title="Strikethrough"
                 aria-label="Format text with a strikethrough"
               >
@@ -591,7 +571,7 @@ export default function ToolbarPlugin(): JSX.Element {
                     "subscript"
                   );
                 }}
-                className={"item " + dropDownActiveClass(isSubscript)}
+                className={dropDownActiveClass(isSubscript)}
                 title="Subscript"
                 aria-label="Format text with a subscript"
               >
@@ -605,7 +585,7 @@ export default function ToolbarPlugin(): JSX.Element {
                     "superscript"
                   );
                 }}
-                className={"item " + dropDownActiveClass(isSuperscript)}
+                className={dropDownActiveClass(isSuperscript)}
                 title="Superscript"
                 aria-label="Format text with a superscript"
               >
@@ -690,6 +670,7 @@ export default function ToolbarPlugin(): JSX.Element {
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
+      {isLink && createPortal(<LinkEditor editor={editor} />, document.body)}
     </div>
   );
 }
