@@ -1,9 +1,9 @@
 import { $isAtNodeEnd } from "@lexical/selection";
 import { type ElementNode, type RangeSelection, type TextNode } from "lexical";
 
-export function getSelectedNode(
+export const getSelectedNode = (
   selection: RangeSelection
-): TextNode | ElementNode {
+): TextNode | ElementNode => {
   const anchor = selection.anchor;
   const focus = selection.focus;
   const anchorNode = selection.anchor.getNode();
@@ -17,12 +17,12 @@ export function getSelectedNode(
   } else {
     return $isAtNodeEnd(anchor) ? anchorNode : focusNode;
   }
-}
+};
 
-export function positionEditorElement(
+export const positionEditorElement = (
   editor: HTMLDivElement,
   rect: DOMRect | null
-) {
+) => {
   if (rect === null) {
     editor.style.opacity = "0";
     editor.style.top = "-1000px";
@@ -34,4 +34,15 @@ export function positionEditorElement(
       rect.left + window.pageXOffset - editor.offsetWidth / 2 + rect.width / 2
     }px`;
   }
-}
+};
+
+const youtubeLinkRegex =
+  /http(?:s?):\/\/(?:www\.)?youtu(?:be\.com\/watch\?v=|\.be\/)([\w\-\_]*)(&(amp;)?‌​[\w\?‌​=]*)?/;
+
+export const getYoutubeId = (content: string) => {
+  const match = youtubeLinkRegex.exec(content);
+
+  const id = match ? match[1] : null;
+
+  return id ?? null;
+};

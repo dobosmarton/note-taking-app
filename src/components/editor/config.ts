@@ -4,6 +4,7 @@ import { ListItemNode, ListNode } from "@lexical/list";
 import { type InitialConfigType } from "@lexical/react/LexicalComposer";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { type EditorThemeClasses } from "lexical";
+import { YouTubeNode } from "./plugins/youtube/youtubeNode";
 
 const EDITOR_NODES = [
   CodeNode,
@@ -12,6 +13,7 @@ const EDITOR_NODES = [
   ListNode,
   ListItemNode,
   QuoteNode,
+  YouTubeNode,
 ];
 
 const theme: EditorThemeClasses = {
